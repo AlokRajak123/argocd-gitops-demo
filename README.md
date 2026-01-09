@@ -207,6 +207,74 @@ Prepare Argo CD interview Q&A
 
 Provide a real-world enterprise GitOps design
 
+(NEXT LEVEL)
+Add Helm chart
+✅ Install Helm
+Run these commands exactly:
+
+cd ~
+curl -fsSL https://get.helm.sh/helm-v3.14.4-linux-amd64.tar.gz -o helm.tar.gz
+tar -xvf helm.tar.gz
+sudo mv linux-amd64/helm /usr/local/bin/helm
+chmod +x /usr/local/bin/helm
+
+Verify:
+helm version
+
+Expected output:
+version.BuildInfo{Version:"v3.14.4", ...}
+✅ Helm is now installed system-wide and permanent
+🚀 Now create your Helm chart
+Go back to your repo:
+cd ~/argocd-gitops-demo
+helm create myapp
+
+Check:
+ls myapp
+
+📦 Commit Helm chart to Git
+git add myapp
+git commit -m "Add Helm chart for myapp"
+git push origin main
+
+🔄 Deploy Helm chart via Argo CD
+Create namespace (once)
+kubectl create namespace myapp
+
+Create Argo CD Application
+argocd app create myapp \
+  --repo https://github.com/AlokRajak123/argocd-gitops-demo.git \
+  --path myapp \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace myapp \
+  --sync-policy automated \
+  --auto-prune \
+  --self-heal
+ 
+  Sync:
+argocd app sync myapp
+
+🔍 Verify
+argocd app get myapp
+kubectl get pods -n myapp
+
+🔐 Make this LAB 100% permanent
+
+These already survive reboot:
+
+✔ Minikube profile (lab-cluster)
+
+✔ Argo CD installed
+
+✔ Git repo registered
+
+✔ Helm installed in /usr/local/bin
+
+✔ Argo CD Application (GitOps)
+
+
+
+
 
 
 
